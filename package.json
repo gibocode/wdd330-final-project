@@ -1,0 +1,11 @@
+{
+  "name": "website-checker",
+  "version": "1.0.0",
+  "author": {
+    "name": "Gilbor Camporazo Jr.",
+    "email": "gcamporazo@byupathway.edu"
+  },
+  "dependencies": {
+    "vanilla-javascript": "^1.1.6"
+  }
+}
