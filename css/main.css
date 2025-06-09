@@ -1,3 +1,9 @@
-@import "./colors.css";
+/* Utilities */
+@import "./utils/colors.css";
+
+/* Components */
+@import "./components/drawer.css";
+
+/* Styles */
 @import "./styles.css";
 @import "./styles-large.css";

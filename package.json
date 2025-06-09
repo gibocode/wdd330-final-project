@@ -5,7 +5,6 @@
     "name": "Gilbor Camporazo Jr.",
     "email": "gcamporazo@byupathway.edu"
   },
-  "dependencies": {
-    "vanilla-javascript": "^1.1.6"
-  }
+  "main": "index.html",
+  "dependencies": {}
 }
