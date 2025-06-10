@@ -57,14 +57,6 @@ export function hideMessage(messageElement = null) {
     }
 }
 
-// Toggles check button
-export function toggleCheckButton(enable = true) {
-    const url = document.querySelector("#url");
-    const selectedMeasurementsCount = document.querySelector("#selected-measurements-count");
-    const checkButton = document.querySelector("#check-button");
-    checkButton.disabled = !enable || url.value == "" || Number(selectedMeasurementsCount.textContent) == 0;
-}
-
 // Measure insights
 export async function measure(url, categories) {
     const insights = new Insights(url, categories);
@@ -111,8 +103,6 @@ export function showScoreDetails(score, category, audits) {
     progressBar.classList.add(bgColor);
     collapseElem.classList.remove("bg-secondary-light", "bg-danger-light", "bg-warning-light", "bg-success-light");
     collapseElem.classList.add(collapseColor);
-    // collapseElem.classList.remove("hide");
-    // collapseElem.classList.add("show");
     const auditDetails = collapseElem.querySelector("div");
     auditDetails.innerHTML = "";
     let details = document.createElement("ul");
@@ -129,6 +119,8 @@ export function showScoreDetails(score, category, audits) {
         details.appendChild(auditItem);
     });
     auditDetails.appendChild(details);
+    enableMeasurementCheckboxes(true);
+    enableCollapse(true);
 }
 
 // Gets color based on score
@@ -213,13 +205,14 @@ export function showSelectedPagespeedInsights(categories) {
         spinnerContainer.classList.remove("show");
         spinnerContainer.classList.add("hide");
     });
+    enableMeasurementCheckboxes(false);
+    enableCollapse(false);
     if (categories.length > 0) {
         categories.forEach(category => {
             const categoryElem = document.querySelector(`#${category}`);
             const spinnerContainer = categoryElem.querySelector(".spinner-container");
             const score = categoryElem.querySelector(".score");
             const progressBar = categoryElem.querySelector(".progress-bar");
-
             categoryElem.classList.remove("hide");
             categoryElem.classList.add("show");
             spinnerContainer.classList.remove("hide");
@@ -231,4 +224,32 @@ export function showSelectedPagespeedInsights(categories) {
             progressBar.classList.add("bg-secondary");
         });
     }
+}
+
+// Toggles check button
+export function enableCheckButton(enable = true) {
+    const url = document.querySelector("#url");
+    const selectedMeasurementsCount = document.querySelector("#selected-measurements-count");
+    const checkButton = document.querySelector("#check-button");
+    checkButton.disabled = !enable || url.value == "" || Number(selectedMeasurementsCount.textContent) == 0;
+}
+
+// Toggles measurement checkboxes
+function enableMeasurementCheckboxes(enable = true) {
+    const checkboxElems = document.querySelectorAll("#selected-measurements input[type=\"checkbox\"]");
+    checkboxElems.forEach(checkboxElem => {
+        checkboxElem.disabled = !enable;
+    });
+}
+
+// Toggles collapses
+function enableCollapse(enable = true) {
+    const collapseElems = document.querySelectorAll("div[data-toggle=\"collapse\"]");
+    collapseElems.forEach(collapseElem => {
+        if (enable) {
+            collapseElem.classList.remove("disabled");
+        } else {
+            collapseElem.classList.add("disabled");
+        }
+    });
 }

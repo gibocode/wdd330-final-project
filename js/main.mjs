@@ -6,14 +6,14 @@ import {
     setLocalStorage,
     showMessage,
     hideMessage,
-    toggleCheckButton,
     measure,
     showPagespeedInsights,
     showSelectedPagespeedInsights,
     showResults,
     hasPagespeedInsights,
     getSelectedCategories,
-    showScoreDetails
+    showScoreDetails,
+    enableCheckButton
 } from "./utils.mjs";
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -27,15 +27,15 @@ document.addEventListener("DOMContentLoaded", function () {
     // URL Input
     url.addEventListener("keyup", function () {
         if (this.value != "") {
-            toggleCheckButton(true);
+            enableCheckButton(true);
         } else {
-            toggleCheckButton(false);
+            enableCheckButton(false);
         }
     });
 
     // Check Button
     checkButton.addEventListener("click", async () => {
-        toggleCheckButton(false);
+        enableCheckButton(false);
         showResults(selectedMeasurements);
         if (hasPagespeedInsights()) {
             const categories = getSelectedCategories(selectedMeasurements);
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             }
         }
-        toggleCheckButton(true);
+        enableCheckButton(true);
     });
 
     function initSelectedMeasurements() {
@@ -97,10 +97,10 @@ document.addEventListener("DOMContentLoaded", function () {
         selectedMeasurementsCount.textContent = count;
         if (count == 0) {
             showMessage("Please select at least one measurement.", "error");
-            toggleCheckButton(false);
+            enableCheckButton(false);
         } else {
             hideMessage();
-            toggleCheckButton(true);
+            enableCheckButton(true);
         }
     }
 
