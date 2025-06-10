@@ -13,7 +13,7 @@ export default class Drawer {
                     drawerBackdrop.classList.add("position-fixed", "top-0", "left-0", "w-100", "h-100", "bg-drawer-backdrop");
                 }
 
-                drawer.insertAdjacentElement("beforeBegin", drawerBackdrop);
+                document.body.appendChild(drawerBackdrop);
 
                 if (drawer.classList.contains("hide") || !drawer.classList.contains("show")) {
                     drawer.classList.remove("hide");
