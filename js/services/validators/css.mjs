@@ -17,13 +17,21 @@ export default class CSSValidator {
         return success;
     }
 
+    getErrors() {
+        return this.data.cssvalidation.errors || [];
+    }
+
     getDetails() {
-        const details = this.data.cssvalidation.errors.map(error => {
-            return {
-                source: error.source,
-                message: error.message
-            };
-        });
+        let details = {};
+        const errors = this.getErrors();
+        if (errors.length > 0) {
+            details = errors.map(error => {
+                return {
+                    source: error.source,
+                    message: error.message
+                };
+            });
+        }
         return details;
     }
 }

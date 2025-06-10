@@ -17,14 +17,22 @@ export default class HTMLValidator {
         return success;
     }
 
+    getMessages() {
+        return this.data.messages || [];
+    }
+
     getDetails() {
-        const details = this.data.messages.map(message => {
-            return {
-                type: message.type,
-                line: message.lastLine,
-                message: message.message
-            };
-        });
+        let details = {};
+        const messages = this.getMessages();
+        if (messages.length > 0) {
+            details = messages.map(message => {
+                return {
+                    type: message.type,
+                    line: message.lastLine,
+                    message: message.message
+                };
+            });
+        }
         return details;
     }
 }
