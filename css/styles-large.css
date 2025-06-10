@@ -13,16 +13,6 @@
     .rounded-lg-2 {
         border-radius: 5px;
     }
-    .overflow-lg-hidden {
-        overflow: hidden;
-    }
-    .drawer {
-        transform: translateX(0) !important;
-        height: calc(100% - 10px);
-    }
-    .bg-drawer-backdrop {
-        display: none !important;
-    }
     .grid-template-columns-2-1 {
         grid-template-columns: 2fr 1fr;
         gap: 10px;

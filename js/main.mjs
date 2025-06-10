@@ -1,10 +1,30 @@
 import "./components/index.mjs";
-import { getLocalStorage, objectToJson, jsonToObject, setLocalStorage, showMessage, hideMessage, toggleCheckButton } from "./utils.mjs";
+import {
+    getLocalStorage,
+    objectToJson,
+    jsonToObject,
+    setLocalStorage,
+    showMessage,
+    hideMessage,
+    toggleCheckButton,
+    measure,
+    showPagespeedInsights,
+    showSelectedPagespeedInsights,
+    showResults,
+    hasPagespeedInsights,
+    getSelectedCategories,
+    showScoreDetails
+} from "./utils.mjs";
 
 document.addEventListener("DOMContentLoaded", function () {
 
     const url = document.querySelector("#url");
+    const checkButton = document.querySelector("#check-button");
+    const selectedMeasurements = document.querySelectorAll("#selected-measurements input[type=\"checkbox\"]");
 
+    let selectedMeasurementsData = {};
+
+    // URL Input
     url.addEventListener("keyup", function () {
         if (this.value != "") {
             toggleCheckButton(true);
@@ -13,9 +33,27 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    const selectedMeasurements = document.querySelectorAll("#selected-measurements input[type=\"checkbox\"]");
-
-    let selectedMeasurementsData = {};
+    // Check Button
+    checkButton.addEventListener("click", async () => {
+        toggleCheckButton(false);
+        showResults(selectedMeasurements);
+        if (hasPagespeedInsights()) {
+            const categories = getSelectedCategories(selectedMeasurements);
+            showPagespeedInsights(categories);
+            if (categories.length > 0) {
+                showSelectedPagespeedInsights(categories);
+                const scoresData = await measure(url.value, categories);
+                const keys = Object.keys(scoresData);
+                keys.forEach(key => {
+                    const data = scoresData[key];
+                    const score = data.score;
+                    const audits = data.audits;
+                    showScoreDetails(score, key, audits);
+                });
+            }
+        }
+        toggleCheckButton(true);
+    });
 
     function initSelectedMeasurements() {
         let data = getLocalStorage("selected-measurements");
