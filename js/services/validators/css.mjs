@@ -8,7 +8,7 @@ export default class CSSValidator {
 
     async validate() {
         let success = false;
-        const response = await fetch(`${this.ENDPOINT}?output=json&&profile=css2&uri=${this.url}`);
+        const response = await fetch(`${this.ENDPOINT}?output=json&&profile=css3&uri=${this.url}`);
         if (response.ok) {
             const data = await response.json();
             this.data = data;
