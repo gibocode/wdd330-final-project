@@ -1,8 +1,9 @@
 /* Utilities */
 @import "./utils/colors.css";
+@import "./utils/fonts.css";
 
 /* Components */
-@import "./components/drawer.css";
+@import "./components/components.css";
 
 /* Styles */
 @import "./styles.css";

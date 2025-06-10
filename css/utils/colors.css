@@ -6,8 +6,20 @@
     background-color: #1987544f;
 }
 
-.bg-light-gray {
-    background-color: rgb(232, 232, 232);
+.bg-warning-light {
+    background-color: #ffc10754;
+}
+
+.bg-orange-light {
+    background-color: #dc703570;
+}
+
+.bg-danger-light {
+    background-color: #dc35456b;
+}
+
+.bg-gray-light {
+    background-color: #0000001f;
 }
 
 .text-orange {
