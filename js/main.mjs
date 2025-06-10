@@ -14,8 +14,8 @@ import {
     getSelectedCategories,
     showScoreDetails,
     enableCheckButton,
-    hasHTMLValidation,
-    validate
+    validate,
+    hasValidation
 } from "./utils.mjs";
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -54,8 +54,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             }
         }
-        if (hasHTMLValidation(selectedMeasurements)) {
-            const validationData = await validate(url.value, "html");
+        if (hasValidation(selectedMeasurements, "html")) {
+            await validate(url.value, "html");
+        }
+        if (hasValidation(selectedMeasurements, "css")) {
+            await validate(url.value, "css");
         }
         enableCheckButton(true);
     });

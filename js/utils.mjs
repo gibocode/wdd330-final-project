@@ -1,4 +1,5 @@
 import Insights from "./services/insights.mjs";
+import CSSValidator from "./services/validators/css.mjs";
 import HTMLValidator from "./services/validators/html.mjs";
 
 // Gets data from local storage
@@ -156,6 +157,8 @@ export function showResults(selectedMeasurements) {
             let result = "pagespeed-insights";
             if (measurement == "html" || measurement == "css") {
                 result = measurement;
+                const container = document.querySelector(`#${measurement}-results-container`);
+                container.innerHTML = createValidationSpinner();
             }
             const resultElem = document.querySelector(`#${result}-results`);
             resultElem.classList.remove("hide");
@@ -255,17 +258,17 @@ function enableCollapse(enable = true) {
     });
 }
 
-// Checks if has HTML validation
-export function hasHTMLValidation(selectedMeasurements) {
-    let hasHTMLValidation = false;
+// Checks if has HTML or CSS validation
+export function hasValidation(selectedMeasurements, type) {
+    let hasValidation = false;
     if (selectedMeasurements.length > 0) {
         selectedMeasurements.forEach(selectedMeasurement => {
-            if (selectedMeasurement.value == "html" && selectedMeasurement.checked) {
-                hasHTMLValidation = true;
+            if (selectedMeasurement.value == type && selectedMeasurement.checked) {
+                hasValidation = true;
             }
         });
     }
-    return hasHTMLValidation;
+    return hasValidation;
 }
 
 // Validates HTML or CSS of a URL
@@ -274,22 +277,54 @@ export async function validate(url, type) {
     let validationData = {};
     if (type == "html") {
         const container = document.querySelector("#html-results-container");
+        container.innerHTML = createValidationSpinner();
         const validator = new HTMLValidator(url);
         const success = await validator.validate();
-        container.innerHTML = "";
         if (success) {
             const details = validator.getDetails();
             if (details.length > 0) {
+                container.innerHTML = "";
                 details.forEach(detail => {
                     const item = createHTMLValidatedItem(detail);
                     container.innerHTML += item;
                 });
+            } else {
+                container.innerHTML = createNoErrorValidation("html");
+            }
+        }
+    }
+    else if (type == "css") {
+        const container = document.querySelector("#css-results-container");
+        container.innerHTML = createValidationSpinner();
+        const validator = new CSSValidator(url);
+        const success = await validator.validate();
+        if (success) {
+            const details = validator.getDetails();
+            if (details.length > 0) {
+                container.innerHTML = "";
+                details.forEach(detail => {
+                    const item = createCSSValidatedItem(detail);
+                    container.innerHTML += item;
+                });
+            } else {
+                container.innerHTML = createNoErrorValidation("css");
             }
         }
     }
     return validationData;
 }
 
+// Creates HTML validation spinner
+function createValidationSpinner() {
+    const template = `<div class="spinner-container d-flex justify-self-center">
+        <div class="spinner-border text-secondary fs-4 spinner-5" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>`;
+    return template;
+}
+
+// Creates HTML Validated Item
 function createHTMLValidatedItem(detail) {
     let type = detail.type;
     let icon = "fa-circle-exclamation";
@@ -306,17 +341,48 @@ function createHTMLValidatedItem(detail) {
     const template = `<div class="alert alert-${type} d-block opacity-100 d-flex">
         <span class="fa ${icon} me-3 fs-2 align-content-center"></span>
         <div>
-            <div>
+            <div class="text-break">
                 <span class="fw-bold me-1">${text} Line #:</span>
                 <span class="html-line">${detail.line}</span>
             </div>
-            <div>
+            <div class="text-break">
                 <span class="fw-bold me-1">Message:</span>
-                <span class="htm-message">${detail.message}</span>
+                <span class="html-message">${detail.message}</span>
             </div>
         </div>
     </div>`;
     return template;
 }
 
+// Creates CSS Validated Item
+function createCSSValidatedItem(detail) {
+    const template = `<div class="alert alert-danger d-block opacity-100 d-flex">
+        <span class="fa fa-triangle-exclamation me-3 fs-2 align-content-center"></span>
+        <div>
+            <div class="text-break">
+                <span class="fw-bold me-1">Error Source:</span>
+                <span class="css-source">${detail.source}</span>
+            </div>
+            <div class="text-break">
+                <span class="fw-bold me-1">Message:</span>
+                <span class="css-message">${detail.message}</span>
+            </div>
+        </div>
+    </div>`;
+    return template;
+}
+
+// Creates no error validation item
+function createNoErrorValidation(type) {
+    const template = `<div class="alert alert-success d-block opacity-100 d-flex">
+        <span class="fa fa-circle-check me-3 fs-2 align-content-center"></span>
+        <div class="d-flex align-items-center">
+            <div>
+                <span class="fw-bold me-1">Message:</span>
+                <span class="${type}-message">No errors found.</span>
+            </div>
+        </div>
+    </div>`;
+    return template;
+}
 

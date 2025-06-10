@@ -95,7 +95,7 @@
     .drawer {
         transform: translateX(0) !important;
         height: fit-content;
-        max-height: calc(100vh - 200px);
+        max-height: 90vh;
     }
     .bg-drawer-backdrop {
         display: none !important;

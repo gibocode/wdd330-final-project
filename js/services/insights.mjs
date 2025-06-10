@@ -12,9 +12,6 @@ export default class Insights {
         let success = false;
         let categoryQueryString = `&category=${this.categories.join("&category=")}`;
         const response = await fetch(`${this.ENDPOINT}?key=${this.KEY}&url=${this.url}${categoryQueryString}`);
-        // const response = await fetch("./data/pstock.json");
-        // const response = await fetch("./data/webcheck.json");
-        // const response = await fetch("./data/test.json");
         if (response.ok) {
             const data = await response.json();
             this.data = data;

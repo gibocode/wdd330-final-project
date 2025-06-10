@@ -1,6 +1,6 @@
-export default class HTMLValidator {
+export default class CSSValidator {
 
-    ENDPOINT = "https://validator.w3.org/nu/";
+    ENDPOINT = "https://jigsaw.w3.org/css-validator/validator/";
 
     constructor(url) {
         this.url = url;
@@ -8,7 +8,7 @@ export default class HTMLValidator {
 
     async validate() {
         let success = false;
-        const response = await fetch(`${this.ENDPOINT}?out=json&doc=${this.url}`);
+        const response = await fetch(`${this.ENDPOINT}?output=json&&profile=css2&uri=${this.url}`);
         if (response.ok) {
             const data = await response.json();
             this.data = data;
@@ -18,11 +18,10 @@ export default class HTMLValidator {
     }
 
     getDetails() {
-        const details = this.data.messages.map(message => {
+        const details = this.data.cssvalidation.errors.map(error => {
             return {
-                type: message.type,
-                line: message.lastLine,
-                message: message.message
+                source: error.source,
+                message: error.message
             };
         });
         return details;
