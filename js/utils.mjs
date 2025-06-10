@@ -1,4 +1,5 @@
 import Insights from "./services/insights.mjs";
+import HTMLValidator from "./services/validators/html.mjs";
 
 // Gets data from local storage
 export function getLocalStorage(key) {
@@ -253,3 +254,69 @@ function enableCollapse(enable = true) {
         }
     });
 }
+
+// Checks if has HTML validation
+export function hasHTMLValidation(selectedMeasurements) {
+    let hasHTMLValidation = false;
+    if (selectedMeasurements.length > 0) {
+        selectedMeasurements.forEach(selectedMeasurement => {
+            if (selectedMeasurement.value == "html" && selectedMeasurement.checked) {
+                hasHTMLValidation = true;
+            }
+        });
+    }
+    return hasHTMLValidation;
+}
+
+// Validates HTML or CSS of a URL
+export async function validate(url, type) {
+    console.log(url);
+    let validationData = {};
+    if (type == "html") {
+        const container = document.querySelector("#html-results-container");
+        const validator = new HTMLValidator(url);
+        const success = await validator.validate();
+        container.innerHTML = "";
+        if (success) {
+            const details = validator.getDetails();
+            if (details.length > 0) {
+                details.forEach(detail => {
+                    const item = createHTMLValidatedItem(detail);
+                    container.innerHTML += item;
+                });
+            }
+        }
+    }
+    return validationData;
+}
+
+function createHTMLValidatedItem(detail) {
+    let type = detail.type;
+    let icon = "fa-circle-exclamation";
+    let text = "Info";
+    if (detail.type == "error") {
+        type = "danger";
+        icon = "fa-triangle-exclamation";
+        text = "Error";
+    } else if (detail.type == "warning") {
+        type = "warning";
+        icon = "fa-triangle-exclamation";
+        text = "Warning";
+    }
+    const template = `<div class="alert alert-${type} d-block opacity-100 d-flex">
+        <span class="fa ${icon} me-3 fs-2 align-content-center"></span>
+        <div>
+            <div>
+                <span class="fw-bold me-1">${text} Line #:</span>
+                <span class="html-line">${detail.line}</span>
+            </div>
+            <div>
+                <span class="fw-bold me-1">Message:</span>
+                <span class="htm-message">${detail.message}</span>
+            </div>
+        </div>
+    </div>`;
+    return template;
+}
+
+

@@ -13,7 +13,9 @@ import {
     hasPagespeedInsights,
     getSelectedCategories,
     showScoreDetails,
-    enableCheckButton
+    enableCheckButton,
+    hasHTMLValidation,
+    validate
 } from "./utils.mjs";
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -51,6 +53,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     showScoreDetails(score, key, audits);
                 });
             }
+        }
+        if (hasHTMLValidation(selectedMeasurements)) {
+            const validationData = await validate(url.value, "html");
         }
         enableCheckButton(true);
     });
